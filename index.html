@@ -1,0 +1,166 @@
+
+<html>
+<head>
+<title>Search Box Example 1</title>
+<meta name="giveahand" content="NOINDEX, NOFOLLOW"/>
+<meta name="viewport" content="initial-scale=1.0">
+<meta charset="utf-8">
+<!-- CSS styles for standard search box -->
+<style type="text/css">
+	#tfheader{
+		background-color:#c3dfef;
+	}
+	#tfnewsearch{
+		float:center;
+		padding:20px;
+	}
+	.tftextinput{
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		border:1px solid #0076a3; border-left:0px;
+		border-top-right-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+	}
+	.tfbutton {
+		margin: 0;
+		padding: 5px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		outline: none;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		color: #ffffff;
+		border: solid 1px #0076a3; border-right:0px;
+		background: #0095cd;
+		background: -webkit-gradient(linear, right top, right bottom, from(#00adee), to(#0078a5));
+		background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+		border-top-right-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+	}
+	.tfbutton:hover {
+		text-decoration: none;
+		background: #007ead;
+		background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+		background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+	}
+	/* Fixes submit button height problem in Firefox */
+	.tfbutton::-moz-focus-inner {
+	  border: 0;
+	}
+	.tfclear{
+		clear:both;
+	}
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+</head>
+<body>
+	<!-- HTML for SEARCH BAR -->
+	<div id="tfheader">
+		<h1>To Give a Hand</h1>
+		
+		  <input type="text" class="tftextinput" name="q" size="21" maxlength="120"><button value="search" class="tfbutton">Search</button
+		
+	<div class="tfclear"></div>
+	</div>
+
+   <div id="map" style="width:100%;height:400px;"></div>
+
+	<script>
+	
+	
+	
+	
+	
+	var map;
+	var service;
+	var infowindow;
+	
+	
+	
+	function initialize() {
+	  var pyrmont = new google.maps.LatLng(40.7485008,-73.9629304);
+	  console.log(pyrmont);
+		
+	  map = new google.maps.Map(document.getElementById('map'), {
+	      center: pyrmont,
+	      zoom: 11
+	    });
+	
+	  var request = {
+	    location: pyrmont,
+	    radius: '500',
+	    query: 'homeless shelter'
+	  };
+	
+	  service = new google.maps.places.PlacesService(map);
+	  service.textSearch(request, callback);
+	  
+	  
+	  
+	  $("button").click(function(){
+		
+		
+		
+		var address = $("input").val();
+		var geocoder = new google.maps.Geocoder();
+	
+		
+		geocoder.geocode({'address': address}, function(results, status) {
+		 	var location = results[0].geometry.location
+	 		map = new google.maps.Map(document.getElementById('map'), {
+		      center: location,
+		      zoom: 11
+		    });
+		 	
+		 	
+		 	console.log(results[0].geometry.location);
+		 		var newRequest = {
+			    location: location,
+			    radius: '500',
+			    query: 'homeless shelter'
+			};
+  
+        service = new google.maps.places.PlacesService(map);
+		service.textSearch(newRequest, callback);
+		 	
+		 	
+		});
+		
+	
+         
+         
+      });
+		
+	}
+	
+	function callback(results, status) {
+	  if (status == google.maps.places.PlacesServiceStatus.OK) {
+	    for (var i = 0; i < results.length; i++) {
+	      var place = results[i];
+	      //createMarker(results[i]);
+	      console.log(place);
+	      var marker = new google.maps.Marker({
+              map: map,
+              position: place.geometry.location,
+              title: place.name,
+              
+            });
+	      
+	    }
+	  }
+	}
+	
+	
+	</script>
+   
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzAuBGuQwjRDRSxMmroMa5f0-sk4L1NnM&callback=initialize&libraries=places"
+    async defer></script>
+
+</body>
+</html>
